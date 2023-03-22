@@ -1,5 +1,9 @@
 package com.epam.mjc;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class MethodParser {
 
     /**
@@ -20,6 +24,40 @@ public class MethodParser {
      * @return {@link MethodSignature} object filled with parsed values from source string
      */
     public MethodSignature parseFunction(String signatureString) {
-        throw new UnsupportedOperationException("You should implement this method.");
+        List<String> methodTokens = StringSplitter.splitByDelimiters(signatureString, List.of("(",")"));
+        List<MethodSignature.Argument> methodArgs = List.of();
+
+        if(methodTokens.size() > 1) {
+            methodArgs = parseMethodArguments(methodTokens.get(1));
+        }
+
+        String[] methodAttributes = methodTokens.get(0).split(" ");
+        String accessModifier, returnType, methodName;
+        if(methodAttributes.length > 2){
+            accessModifier = methodAttributes[0];
+            returnType = methodAttributes[1];
+            methodName = methodAttributes[2];
+        } else {
+            accessModifier = null;
+            returnType = methodAttributes[0];
+            methodName = methodAttributes[1];
+        }
+        MethodSignature ret = new MethodSignature(methodName, methodArgs);
+        ret.setAccessModifier(accessModifier);
+        ret.setReturnType(returnType);
+        return ret;
+    }
+
+    private static MethodSignature.Argument toArgument(String s){
+        String[] argParsed = s.split(" ");
+        return new MethodSignature.Argument(argParsed[0],argParsed[1]);
+    }
+
+    private static List<MethodSignature.Argument> parseMethodArguments(String s){
+        return StringSplitter.splitByDelimiters(s, List.of(","))
+                .stream()
+                .map(String::trim)
+                .map(MethodParser::toArgument )
+                .collect(Collectors.toList());
     }
 }

@@ -70,5 +70,13 @@ public class MethodSignature {
         public void setName(String name) {
             this.name = name;
         }
+
+        @Override
+        public String toString() {
+            return "Argument{" +
+                    "type='" + type + '\'' +
+                    ", name='" + name + '\'' +
+                    '}';
+        }
     }
 }

@@ -1,7 +1,8 @@
 package com.epam.mjc;
 
-import java.util.Collection;
-import java.util.List;
+import java.sql.PreparedStatement;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class StringSplitter {
 
@@ -12,7 +13,14 @@ public class StringSplitter {
      * @param delimiters collection of delimiter strings
      * @return List of substrings
      */
-    public List<String> splitByDelimiters(String source, Collection<String> delimiters) {
-        throw new UnsupportedOperationException("You should implement this method.");
+    public static List<String> splitByDelimiters(String source, Collection<String> delimiters) {
+
+        StringJoiner sj = new StringJoiner("", "[", "]+");
+        for(String s : delimiters){
+            sj.add(s);
+        }
+        return Arrays.stream(source.split(sj.toString()))
+                .filter( s -> s.length() > 0)
+                .collect(Collectors.toList());
     }
 }
